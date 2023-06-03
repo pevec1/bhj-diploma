@@ -3,13 +3,17 @@
  * Имеет свойство URL, равно пустой строке.
  * */
 class Entity {
+  constructor(url){
+    this.url = url
+  }
   /**
    * Запрашивает с сервера список данных.
    * Это могут быть счета или доходы/расходы
    * (в зависимости от того, что наследуется от Entity)
    * */
   static list(data, callback){
-
+    let url = this.url
+    createRequest({url, data, callback})
   }
 
   /**
@@ -29,3 +33,24 @@ class Entity {
 
   }
 }
+let data = {
+  mail: 'ivan@biz.pro',
+  password: 'odinodin'
+};
+
+
+let ent = new Entity('')
+console.log( ent.url ); // ''
+ent.list(data, (function(err, response) {
+  console.log( 'Данные, если нет ошибки', response );
+  try {
+    return { response, responseBody: response.json() };
+  } catch (e) {
+  console.log( 'Ошибка, если есть', err );
+    return { responseBody: {}, response };
+  }
+
+
+})
+
+);
