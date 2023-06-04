@@ -33,24 +33,5 @@ class Entity {
 
   }
 }
-let data = {
-  mail: 'ivan@biz.pro',
-  password: 'odinodin'
-};
 
-
-let ent = new Entity('')
-console.log( ent.url ); // ''
-ent.list(data, (function(err, response) {
-  console.log( 'Данные, если нет ошибки', response );
-  try {
-    return { response, responseBody: response.json() };
-  } catch (e) {
-  console.log( 'Ошибка, если есть', err );
-    return { responseBody: {}, response };
-  }
-
-
-})
-
-);
+console.log(Entity.URL)

@@ -2,25 +2,27 @@
  * Основная функция для совершения запросов
  * на сервер.
  * */
-const createRequest = (options = {url, data, method, headers, mode, callback}) => {
-  let url = options.url
-  let data = options.data
-  let method = options.method
-  let headers = options.headers
-  let mode = options.mode
-  url = url + encodeURI('?' +  data.mail + '=' + data.password)
+const createRequest = ({url, data, method, headers, mode, callback}) => {
+  url = url + encodeURI('/?' +  data.email + '=' + data.password)
   console.log(url)
-     fetch(url, {method, headers, mode}).then((response) => {
-    console.log( 'Данные, если нет ошибки', response );
-    try {
-      return { response: response };
-    } catch (e) {
-    console.log( 'Ошибка, если есть', err );
-      return { responseBody: {}, response };
+  let xhr = new XMLHttpRequest();
+  xhr.responseType = 'json'; 
+  // формат, в котором необходимо выдать результат
+  xhr.onreadystatechange = function(e) {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+       callback('done: ' + xhr.status, xhr.response)
+      } else {
+        callback('error: ' + xhr.status)
+      }
     }
-  })
+  }
+  xhr.ontimeout = function () {
+   console.log('Timeout')
+  }
+  xhr.open('get', url, true)
+  xhr.send();
 };
-
 
 // здесь перечислены все возможные параметры для функции
 createRequest({
@@ -35,38 +37,9 @@ createRequest({
     Если в процессе запроса произойдёт ошибка, её объект
     должен быть в параметре err.
     Если в запросе есть данные, они должны быть переданы в response.
-  */
+  */  
   callback: (err, response) => {
     console.log( 'Ошибка, если есть', err );
     console.log( 'Данные, если нет ошибки', response );
-  }
-});
-
-// здесь перечислены все возможные параметры для функции
-createRequest({
-  url: 'https://example.com', // адрес
-  data: { // произвольные данные, могут отсутствовать
-    email: 'ivan@poselok.ru',
-    password: 'odinodin'
-  },
-  method: 'GET', // метод запроса
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  mode: 'no-cors',
-  /*
-    Функция, которая сработает после запроса.
-    Если в процессе запроса произойдёт ошибка, её объект
-    должен быть в параметре err.
-    Если в запросе есть данные, они должны быть переданы в response.
-  */
-  callback:async(err, response) => {
-    console.log( 'Данные, если нет ошибки', response );
-    try {
-      return { response, responseBody: await response.json() };
-    } catch (e) {
-    console.log( 'Ошибка, если есть', err );
-      return { responseBody: {}, response };
-    }
-  }
+}
 });
