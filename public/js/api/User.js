@@ -10,16 +10,21 @@ class User {
    * локальном хранилище.
    * */
   static setCurrent (user) {
-    localStorage.setItem(user.id, user.name)
+    // localStorage.clear()
+    // localStorage.setItem(
+    //   'user',
+    //   JSON.stringify({ id: user.id, name: user.name })
+    // )
     //console.log(localStorage.getItem(user.id));
+    localStorage.user = JSON.stringify(user);
   }
 
   /**
    * Удаляет информацию об авторизованном
    * пользователе из локального хранилища.
    * */
-  static unsetCurrent (user) {
-    localStorage.removeItem(user.id)
+  static unsetCurrent () {
+    localStorage.removeItem('user')
   }
 
   /**
@@ -27,26 +32,32 @@ class User {
    * из локального хранилища
    * */
   static current () {
-    return { id: user.id, name: localStorage.getItem(user.id) }
+    return localStorage.getItem('user')
   }
 
   /**
    * Получает информацию о текущем
    * авторизованном пользователе.
    * */
-  static fetch (callback) {
-   createRequest({ 
-      url: this.URL + '/current', 
-      data, 
-      method :'GET', 
-      callback:( err, response ) => {
-      try {
-        console.log( response.user.id ); // 2
-      } catch (e) {
-        console.log( 'Ошибка, если есть', err ,e);
+  static fetch (data, callback) {
+    let url= this.URL + '/current'
+    let method='GET'
+    callback = (err, response) => {
+      if (response && response.user) {
+        console.log(response)
+        this.setCurrent(response.user)
+      } else {
+        console.log(err, response)
+        this.unsetCurrent()
       }
-   }
-   })
+     // console.log(err, response)
+    }
+return createRequest({
+      url,
+      data,
+      method,
+      callback
+    })
   }
 
   /**
@@ -79,17 +90,20 @@ class User {
   static register (data, callback) {
     let url = this.URL + '/register'
     let method = 'POST'
-    createRequest({
+    callback = (err, response) => {
+      if (response && response.user) {
+        console.log(response)
+        User.setCurrent(response.user);
+      } else{
+        console.log(err)
+      }
+
+    }
+   return createRequest({
       url,
       data,
       method,
-      callback: (err, response) => {
-        try {
-          console.log(response.user.id) // 2
-        } catch (e) {
-          console.log('Ошибка, если есть', err, e)
-        }
-      }
+      callback
     })
   }
 
@@ -104,8 +118,14 @@ const user = {
   id: 1,
   name: 'demo'
 }
-
+const data = {
+    name: 'And',
+    email: 'pevec1@yandex.ru',
+    password: '123456'
+  }
+  
 User.setCurrent(user)
+console.log(localStorage.user)
 const current = User.current()
 //User.unsetCurrent();
 console.log(current) // объект { id: 12, name: 'Vlad' }
@@ -116,18 +136,11 @@ console.log(current) // объект { id: 12, name: 'Vlad' }
 // }});
 
 User.fetch((err, response) => {
-  try {
-    console.log(response.user.id) // 2
-  } catch (e) {
-    console.log('Ошибка, если есть', err, e)
-  }
+  console.log(response.user.id) // 2
+    console.log(err)
 })
 
 // производим регистрацию
-User.register(data, (err, response) => {
-  try {
-    console.log(response)
-  } catch (e) {
-    console.log('Ошибка, если есть', err, e)
-  }
-})
+User.register( data, ( err, response ) => {
+  console.log( response );
+});
