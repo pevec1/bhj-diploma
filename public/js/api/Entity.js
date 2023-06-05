@@ -50,7 +50,7 @@ class Entity {
   }
 }
 
-console.log(Entity.URL)
+// console.log(Entity.URL)
 // const data = {
 //   email: 'demo@demo',
 //   password: 'demo'

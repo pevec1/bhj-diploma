@@ -42,7 +42,7 @@ class User {
   static fetch (data, callback) {
     let url= this.URL + '/current'
     let method='GET'
-    callback = (err, response) => {
+    callback = (response, err) => {
       if (response && response.user) {
         console.log(response)
         this.setCurrent(response.user)
@@ -67,17 +67,21 @@ return createRequest({
    * User.setCurrent.
    * */
   static login (data, callback) {
-    createRequest({
-      url: this.URL + '/login',
-      method: 'POST',
-      responseType: 'json',
-      data,
-      callback: (err, response) => {
-        if (response && response.user) {
-          this.setCurrent(response.user)
-        }
-        callback(err, response)
+    let url= this.URL + '/login'
+    let method='POST'
+    callback = (response, err) => {
+      if (response && response.user) {
+        console.log(response)
+        this.setCurrent(response.user)
+      } else {
+        console.log(err)
       }
+    }
+    return createRequest({
+      url,
+      method,
+      data,
+      callback
     })
   }
 
@@ -90,7 +94,7 @@ return createRequest({
   static register (data, callback) {
     let url = this.URL + '/register'
     let method = 'POST'
-    callback = (err, response) => {
+    callback = (response, err) => {
       if (response && response.user) {
         console.log(response)
         User.setCurrent(response.user);
@@ -111,36 +115,55 @@ return createRequest({
    * Производит выход из приложения. После успешного
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
-  static logout (callback) {}
+  static logout (callback) {
+    let url= this.URL + '/logout'
+    let method='POST'
+    callback = (response, err) => {
+      if (response && response.user) {
+        console.log(response)
+        this.unsetCurrent()
+      } else {
+        console.log(err)
+      }
+    }
+    return createRequest({
+      url,
+      method,
+      data,
+      callback
+    })
+  }
 }
 
-const user = {
-  id: 1,
-  name: 'demo'
-}
-const data = {
-    name: 'And',
-    email: 'pevec1@yandex.ru',
-    password: '123456'
-  }
+// const user = {
+//   id: "21iixag43olij2z7xc",
+//   name: 'And'
+// }
+// const data = {
+//     name: 'And',
+//     email: 'pevec1@yandex.ru',
+//     password: '123456'
+//   }
   
-User.setCurrent(user)
-console.log(localStorage.user)
-const current = User.current()
-//User.unsetCurrent();
-console.log(current) // объект { id: 12, name: 'Vlad' }
+// User.setCurrent(user)
+// console.log(localStorage.user)
+// const current = User.current()
+// //User.unsetCurrent();
+// console.log(current) // объект { id: 12, name: 'Vlad' }
 // User.login({user:{id:1,name:"demo"}, callback: function( err, response ) {
 //   // эта функция работает аналогично callback в createRequest
 //   console.log( 'Ошибка, если есть', err );
 //   console.log( 'Данные, если нет ошибки', response );
 // }});
 
-User.fetch((err, response) => {
-  console.log(response.user.id) // 2
-    console.log(err)
-})
-
+// User.fetch((response, err) => {
+//   console.log(response.user.id) // 2
+//     console.log(err)
+// })
 // производим регистрацию
-User.register( data, ( err, response ) => {
-  console.log( response );
-});
+// User.register( data, ( response, err ) => {
+//   console.log( response );
+// });
+// User.login( data)
+//User.unsetCurrent();
+//User.logout()
