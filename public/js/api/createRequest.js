@@ -11,8 +11,15 @@ const createRequest = ({url, data, method, headers, mode, callback}) => {
   xhr.onreadystatechange = function(e) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
-       callback('done: ' + xhr.status, xhr.response)
-      } else {
+          if(xhr.response.success===true){
+        try{
+            callback(xhr.response)
+        } catch(e)
+        {
+          callback('error: ' + e)       
+        }
+          }
+      } else if(xhr.response.success===false){
         callback('error: ' + xhr.status)
       }
     }
@@ -21,8 +28,9 @@ const createRequest = ({url, data, method, headers, mode, callback}) => {
    console.log('Timeout')
   }
   xhr.open(method, url, true, data.email, data.password)
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send();
+  //xhr.setRequestHeader('Content-Type', 'application/json');
+  const formData = new FormData;
+  xhr.send(formData);
 };
 
 // // здесь перечислены все возможные параметры для функции

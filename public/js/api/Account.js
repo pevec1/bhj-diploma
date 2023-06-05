@@ -11,14 +11,17 @@ class Account extends Entity {
    * */
   static get(id = '', callback){
     let url = this.URL + '/' + id
+    console.log(url)
     let method = 'GET'
       createRequest({url, data, method, callback})
-
   }
 }
 
-Account.get( 1, function ( err, response ) {
+Entity.get( 1, function ( err, response ) {
   // ... получили ответ
-  console.log( 'Ошибка, если есть', err );
-  console.log( 'Данные, если нет ошибки', response );
+  try {
+    console.log( 'Данные, если нет ошибки', response );
+  } catch(e) {
+    console.log( 'Ошибка, если есть', err, e );
+  }
 });

@@ -6,6 +6,9 @@ class Entity {
   constructor(){
   }
   static URL = '';
+  static get (){
+    return 1
+  }
   /**
    * Запрашивает с сервера список данных.
    * Это могут быть счета или доходы/расходы

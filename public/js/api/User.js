@@ -18,7 +18,7 @@ class User {
    * Удаляет информацию об авторизованном
    * пользователе из локального хранилища.
    * */
-  static unsetCurrent() {
+  static unsetCurrent(user) {
     localStorage.removeItem(user.id)
   }
 
@@ -27,7 +27,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    return localStorage.getItem(user.id)
+    return {id: user.id, name: localStorage.getItem(user.id)} 
   }
 
   /**
@@ -35,6 +35,9 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
+    let url=this.URL + '/current' 
+    let method = 'GET'
+      createRequest({url, data, method, callback})
 
   }
 
@@ -66,6 +69,9 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
+    let url=this.URL + '/register' 
+    let method = 'POST'
+      createRequest({url, data, method, callback})
 
   }
 
@@ -80,7 +86,7 @@ class User {
 
 const user = {
   id: 1,
-  name: 'demo'
+  name: 'demo',
 };
 
 User.setCurrent( user );
@@ -92,3 +98,20 @@ console.log( current ); // объект { id: 12, name: 'Vlad' }
 //   console.log( 'Ошибка, если есть', err );
 //   console.log( 'Данные, если нет ошибки', response );
 // }});
+
+User.fetch(( err, response ) => {
+  try {
+    console.log( response.user.id ); // 2
+  } catch (e) {
+    console.log( 'Ошибка, если есть', err ,e);
+  }
+});
+
+// производим регистрацию
+User.register( data, ( err, response ) => {
+  try {
+  console.log( response );
+  }catch (e) {
+  console.log( 'Ошибка, если есть', err ,e);
+  }
+});
