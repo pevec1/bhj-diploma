@@ -11,16 +11,13 @@ const createRequest = ({url, data, method, headers, mode, callback}) => {
   xhr.onreadystatechange = function(e) {
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
-          if(xhr.response.success===true){
         try{
             callback(xhr.response)
         } catch(e)
         {
           callback('error: ' + e)       
-        }
-          }
-      } else if(xhr.response.success===false){
         callback('error: ' + xhr.status)
+        }
       }
     }
   }
@@ -29,26 +26,30 @@ const createRequest = ({url, data, method, headers, mode, callback}) => {
   }
   xhr.open(method, url, true, data.email, data.password)
   //xhr.setRequestHeader('Content-Type', 'application/json');
+  if (method === 'POST') {
   const formData = new FormData;
   xhr.send(formData);
+  } else {
+    xhr.send()
+  }
 };
 
-// // здесь перечислены все возможные параметры для функции
-// createRequest({
-//   url: '', // адрес
-//   data: { // произвольные данные, могут отсутствовать
-//     email: 'pevec1@yandex.ru',
-//     password: '123456'
-//   },
-//   method: 'GET', // метод запроса
-//   /*
-//     Функция, которая сработает после запроса.
-//     Если в процессе запроса произойдёт ошибка, её объект
-//     должен быть в параметре err.
-//     Если в запросе есть данные, они должны быть переданы в response.
-//   */  
-//   callback: (err, response) => {
-//     console.log( 'Ошибка, если есть', err );
-//     console.log( 'Данные, если нет ошибки', response );
-// }
-// });
+// здесь перечислены все возможные параметры для функции
+createRequest({
+  url: '', // адрес
+  data: { // произвольные данные, могут отсутствовать
+    email: 'demo@demo',
+    password: 'demo'
+  },
+  method: 'GET', // метод запроса
+  /*
+    Функция, которая сработает после запроса.
+    Если в процессе запроса произойдёт ошибка, её объект
+    должен быть в параметре err.
+    Если в запросе есть данные, они должны быть переданы в response.
+  */  
+  callback: (err, response) => {
+    console.log( 'Ошибка, если есть', err );
+    console.log( 'Данные, если нет ошибки', response );
+}
+});

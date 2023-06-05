@@ -6,8 +6,8 @@ class Entity {
   constructor(){
   }
   static URL = '';
-  static get (){
-    return 1
+  static get(){
+    return
   }
   /**
    * Запрашивает с сервера список данных.
@@ -52,11 +52,11 @@ const data = {
   password: 'demo'
 };
 
-// Entity.list( data, function( err, response ) {
-//   // эта функция работает аналогично callback в createRequest
-//   console.log( 'Ошибка, если есть', err );
-//   console.log( 'Данные, если нет ошибки', response );
-// });
+Entity.list( data, function( err, response ) {
+  // эта функция работает аналогично callback в createRequest
+  console.log( 'Ошибка, если есть', err );
+  console.log( 'Данные, если нет ошибки', response );
+});
 // Entity.create( data, function( err, response ) {
 //   // эта функция работает аналогично callback в createRequest
 //   console.log( 'Ошибка, если есть', err );

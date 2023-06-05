@@ -4,21 +4,21 @@
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
-  static URL = '/user';
+  static URL = '/user'
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
-  static setCurrent(user) {
-      localStorage.setItem(user.id, user.name)
-      //console.log(localStorage.getItem(user.id));
+  static setCurrent (user) {
+    localStorage.setItem(user.id, user.name)
+    //console.log(localStorage.getItem(user.id));
   }
 
   /**
    * Удаляет информацию об авторизованном
    * пользователе из локального хранилища.
    * */
-  static unsetCurrent(user) {
+  static unsetCurrent (user) {
     localStorage.removeItem(user.id)
   }
 
@@ -26,19 +26,27 @@ class User {
    * Возвращает текущего авторизованного пользователя
    * из локального хранилища
    * */
-  static current() {
-    return {id: user.id, name: localStorage.getItem(user.id)} 
+  static current () {
+    return { id: user.id, name: localStorage.getItem(user.id) }
   }
 
   /**
    * Получает информацию о текущем
    * авторизованном пользователе.
    * */
-  static fetch(callback) {
-    let url=this.URL + '/current' 
-    let method = 'GET'
-      createRequest({url, data, method, callback})
-
+  static fetch (callback) {
+   createRequest({ 
+      url: this.URL + '/current', 
+      data, 
+      method :'GET', 
+      callback:( err, response ) => {
+      try {
+        console.log( response.user.id ); // 2
+      } catch (e) {
+        console.log( 'Ошибка, если есть', err ,e);
+      }
+   }
+   })
   }
 
   /**
@@ -47,7 +55,7 @@ class User {
    * сохранить пользователя через метод
    * User.setCurrent.
    * */
-  static login(data, callback) {
+  static login (data, callback) {
     createRequest({
       url: this.URL + '/login',
       method: 'POST',
@@ -55,11 +63,11 @@ class User {
       data,
       callback: (err, response) => {
         if (response && response.user) {
-          this.setCurrent(response.user);
+          this.setCurrent(response.user)
         }
-        callback(err, response);
+        callback(err, response)
       }
-    });
+    })
   }
 
   /**
@@ -68,50 +76,58 @@ class User {
    * сохранить пользователя через метод
    * User.setCurrent.
    * */
-  static register(data, callback) {
-    let url=this.URL + '/register' 
+  static register (data, callback) {
+    let url = this.URL + '/register'
     let method = 'POST'
-      createRequest({url, data, method, callback})
-
+    createRequest({
+      url,
+      data,
+      method,
+      callback: (err, response) => {
+        try {
+          console.log(response.user.id) // 2
+        } catch (e) {
+          console.log('Ошибка, если есть', err, e)
+        }
+      }
+    })
   }
 
   /**
    * Производит выход из приложения. После успешного
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
-  static logout(callback) {
-
-  }
+  static logout (callback) {}
 }
 
 const user = {
   id: 1,
-  name: 'demo',
-};
+  name: 'demo'
+}
 
-User.setCurrent( user );
-const current = User.current();
+User.setCurrent(user)
+const current = User.current()
 //User.unsetCurrent();
-console.log( current ); // объект { id: 12, name: 'Vlad' }
+console.log(current) // объект { id: 12, name: 'Vlad' }
 // User.login({user:{id:1,name:"demo"}, callback: function( err, response ) {
 //   // эта функция работает аналогично callback в createRequest
 //   console.log( 'Ошибка, если есть', err );
 //   console.log( 'Данные, если нет ошибки', response );
 // }});
 
-User.fetch(( err, response ) => {
+User.fetch((err, response) => {
   try {
-    console.log( response.user.id ); // 2
+    console.log(response.user.id) // 2
   } catch (e) {
-    console.log( 'Ошибка, если есть', err ,e);
+    console.log('Ошибка, если есть', err, e)
   }
-});
+})
 
 // производим регистрацию
-User.register( data, ( err, response ) => {
+User.register(data, (err, response) => {
   try {
-  console.log( response );
-  }catch (e) {
-  console.log( 'Ошибка, если есть', err ,e);
+    console.log(response)
+  } catch (e) {
+    console.log('Ошибка, если есть', err, e)
   }
-});
+})
