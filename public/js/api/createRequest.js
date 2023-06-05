@@ -3,7 +3,7 @@
  * на сервер.
  * */
 const createRequest = ({url, data, method, headers, mode, callback}) => {
-  url = url + encodeURI('/?' +  data.email + '=' + data.password)
+  //url = url + encodeURI('/?' +  data.email + '=' + data.password)
   console.log(url)
   let xhr = new XMLHttpRequest();
   xhr.responseType = 'json'; 
@@ -20,26 +20,27 @@ const createRequest = ({url, data, method, headers, mode, callback}) => {
   xhr.ontimeout = function () {
    console.log('Timeout')
   }
-  xhr.open('get', url, true)
+  xhr.open(method, url, true, data.email, data.password)
+  xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send();
 };
 
-// здесь перечислены все возможные параметры для функции
-createRequest({
-  url: '', // адрес
-  data: { // произвольные данные, могут отсутствовать
-    email: 'pevec1@yandex.ru',
-    password: '123456'
-  },
-  method: 'GET', // метод запроса
-  /*
-    Функция, которая сработает после запроса.
-    Если в процессе запроса произойдёт ошибка, её объект
-    должен быть в параметре err.
-    Если в запросе есть данные, они должны быть переданы в response.
-  */  
-  callback: (err, response) => {
-    console.log( 'Ошибка, если есть', err );
-    console.log( 'Данные, если нет ошибки', response );
-}
-});
+// // здесь перечислены все возможные параметры для функции
+// createRequest({
+//   url: '', // адрес
+//   data: { // произвольные данные, могут отсутствовать
+//     email: 'pevec1@yandex.ru',
+//     password: '123456'
+//   },
+//   method: 'GET', // метод запроса
+//   /*
+//     Функция, которая сработает после запроса.
+//     Если в процессе запроса произойдёт ошибка, её объект
+//     должен быть в параметре err.
+//     Если в запросе есть данные, они должны быть переданы в response.
+//   */  
+//   callback: (err, response) => {
+//     console.log( 'Ошибка, если есть', err );
+//     console.log( 'Данные, если нет ошибки', response );
+// }
+// });
